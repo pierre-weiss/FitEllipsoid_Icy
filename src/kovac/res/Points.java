@@ -14,7 +14,7 @@ import kovac.saving.SavingStatic;
 import kovac.shapes.EllipsoidOverlay;
 import kovac.shapes.GroupPointsOverlay;
 import kovac.shapes.PointOverlay;
-import plugins.weiss.segmentation3d.Segmentation3D;
+import plugins.weiss.fitellipsoid.fitellipsoid;
 
 /**
  * This class is here to save and display the clicked points from
@@ -127,19 +127,20 @@ public class Points {
 			System.out.println("Generating ellipsoid number " + i++);
 			for (PointInSpace pt : currentList)
 				pointsToUse.add(pt.getPoint());
-			algo = new EllipsoidAlgorithm(pointsToUse);
-			ellipsoid = (EllipsoidOverlay) algo.generateEllipsoid();
-			LinkedViewersUtil.addOverlayToVTK(ellipsoid);
-			ellipsoid.setName("Ellipsoid " + SavingStatic.getNumberOfEllipsoids());
-			ellipsoid.validate();
-			if (Segmentation3D.isDisplayingPoints()) {
-				GroupPointsOverlay group = new GroupPointsOverlay("Group number " + groups.size(), pointsToUse);
-				groups.add(group);
-				LinkedViewersUtil.addOverlayToVTK(group);
-			}
-			ellipsoid.checkValues();
-			pointsToUse.clear();
 		}
+		algo = new EllipsoidAlgorithm(pointsToUse);
+		ellipsoid = (EllipsoidOverlay) algo.generateEllipsoid();
+		LinkedViewersUtil.addOverlayToVTK(ellipsoid);
+		ellipsoid.setName("Ellipsoid " + SavingStatic.getNumberOfEllipsoids());
+		ellipsoid.validate();
+		if (fitellipsoid.isDisplayingPoints()) {
+			GroupPointsOverlay group = new GroupPointsOverlay("Group number " + groups.size(), pointsToUse);
+			groups.add(group);
+			LinkedViewersUtil.addOverlayToVTK(group);
+		}
+		ellipsoid.checkValues();
+		pointsToUse.clear();
+
 		clear();
 	}
 

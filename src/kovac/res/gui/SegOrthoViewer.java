@@ -70,7 +70,7 @@ import kovac.res.enums.Methods;
 import kovac.res.util.LinkedViewersUtil;
 import kovac.res.util.PaintersUtil;
 import kovac.shapes.AxisOverlay;
-import plugins.weiss.segmentation3d.Segmentation3D;
+import plugins.weiss.fitellipsoid.fitellipsoid;
 
 public class SegOrthoViewer implements PluginCanvas {
 
@@ -1031,12 +1031,12 @@ public class SegOrthoViewer implements PluginCanvas {
 						e.consume();
 						return;
 					}
-					if (Segmentation3D.getChosenMethod() == Methods.POINTS) {
+					if (fitellipsoid.getChosenMethod() == Methods.POINTS) {
 						if (EventUtil.isRightMouseButton(e)) {
 							Points.removeLastOne();
 							return;
 						}
-						if (Segmentation3D.getChosenMethod() == Methods.POINTS) {
+						if (fitellipsoid.getChosenMethod() == Methods.POINTS) {
 							Point3D pointToDraw = new Point3D.Double(
 									getClickCoordinates(currentDimension, e.getX(), e.getY()));
 							Points.addPoint(pointToDraw, currentDimension);
@@ -1070,7 +1070,7 @@ public class SegOrthoViewer implements PluginCanvas {
 						e.consume();
 						return;
 					}
-					if (Segmentation3D.getChosenMethod() == Methods.ELLIPSES)
+					if (fitellipsoid.getChosenMethod() == Methods.ELLIPSES)
 						// TODO : Ellipse
 						return;
 				}
@@ -1093,7 +1093,7 @@ public class SegOrthoViewer implements PluginCanvas {
 						repaint();
 						return;
 					}
-					if (Segmentation3D.getChosenMethod() == Methods.ELLIPSES) {
+					if (fitellipsoid.getChosenMethod() == Methods.ELLIPSES) {
 						// TODO : Ellipse
 					}
 					return;

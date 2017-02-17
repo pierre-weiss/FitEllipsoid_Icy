@@ -5,7 +5,7 @@ import icy.gui.frame.IcyFrameListener;
 import icy.gui.viewer.Viewer;
 import kovac.res.Points;
 import kovac.saving.SavingStatic;
-import plugins.weiss.segmentation3d.Segmentation3D;
+import plugins.weiss.fitellipsoid.fitellipsoid;
 
 /**
  * This class implements IcyFrameListener and is used to link two viewers
@@ -47,7 +47,7 @@ public class LinkListener implements IcyFrameListener {
 		if (viewerLinked == null)
 			return;
 		viewerLinked.close();
-		Segmentation3D.setTextSequence("Confirm sequence");
+		fitellipsoid.setTextSequence("Confirm sequence");
 	}
 
 	@Override

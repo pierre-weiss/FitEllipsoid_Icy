@@ -35,7 +35,7 @@ import plugins.adufour.ezplug.EzVarSequence;
 /**
  * Main class of the Plugin
  * 
- * @author bastien.kovac
+ * @author bastien.kovac & Pierre Weiss
  * 
  */
 public class fitellipsoid extends EzPlug implements EzStoppable {

@@ -13,7 +13,7 @@ import icy.type.point.Point3D;
 import kovac.res.Points;
 import kovac.res.Points.PointInSpace;
 import kovac.res.enums.Methods;
-import plugins.weiss.segmentation3d.Segmentation3D;
+import plugins.weiss.fitellipsoid.fitellipsoid;
 
 public class PaintersUtil {
 
@@ -52,7 +52,7 @@ public class PaintersUtil {
 	}
 
 	public static void paintPoints(Graphics2D g2, DimensionId currentDimension, double[] truePos) {
-		if (Segmentation3D.getChosenMethod() == Methods.POINTS) {
+		if (fitellipsoid.getChosenMethod() == Methods.POINTS) {
 			g2.setColor(Color.RED);
 			Rectangle2D point = null;
 			double[] scale = LinkedViewersUtil.getScale();
