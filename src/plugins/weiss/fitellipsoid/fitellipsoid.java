@@ -19,9 +19,12 @@ import icy.system.thread.ThreadUtil;
 import kovac.binaryMask.ExportBinaryMask;
 import kovac.res.Points;
 import kovac.res.enums.Methods;
+import kovac.res.gui.SegOrthoViewer;
 import kovac.res.util.LinkedViewersUtil;
 import kovac.saving.ExportCSV;
 import kovac.saving.Saving;
+import kovac.saving.SavingStatic;
+
 import plugins.adufour.ezplug.EzButton;
 import plugins.adufour.ezplug.EzGUI;
 import plugins.adufour.ezplug.EzPlug;
@@ -49,12 +52,14 @@ public class fitellipsoid extends EzPlug implements EzStoppable {
 	private static EzButton exportCSV;
 	private static EzButton confirmSequence;
 	private static EzButton exportBinary;
+	private static EzButton removeLastEllipsoid;
 	private static EzVarBoolean displayPoints;
 
 	private static ActionListener confirmListener;
 	private static EzVarListener<Methods> methodListener;
 	private static ActionListener exportListener;
 	private static ActionListener exportBinaryListener;
+	private static ActionListener removeListener;
 
 	@Override
 	public void execute() {
@@ -68,6 +73,11 @@ public class fitellipsoid extends EzPlug implements EzStoppable {
 		case POINTS:
 			Points.saveCurrentList();
 			Points.createEllipsoids();
+			LinkedViewersUtil.getOrthCanvas().repaint(); //refreshes orthoviews
+			// Here we want to unlock the orthoview
+			//LinkedViewersUtil.getOrth().getCanvas()
+			//SegOrthoViewer.this.getlock().setSelected(0);
+
 			break;
 		default:
 			break;
@@ -99,6 +109,7 @@ public class fitellipsoid extends EzPlug implements EzStoppable {
 		addEzComponent(methodChoice);
 		addEzComponent(exportCSV);
 		addEzComponent(exportBinary);
+		addEzComponent(removeLastEllipsoid);
 
 		methodChoice.addVarChangeListener(methodListener);
 		methodChoice.setEnabled(false);
@@ -116,8 +127,9 @@ public class fitellipsoid extends EzPlug implements EzStoppable {
 		exportCSV = new EzButton("Export as CSV", exportListener);
 		exportCSV.setToolTipText("Export data as a CSV file");
 		exportBinary = new EzButton("Export as Binary Mask", exportBinaryListener);
-		exportBinary.setToolTipText(
-				"Create a new binary image, where every pixel's value is 0, except for the ones inside an ellipsoid");
+		exportBinary.setToolTipText("Create a new binary image, where every pixel's value is 0, except for the ones inside an ellipsoid");
+		removeLastEllipsoid  = new EzButton("Remove last ellipsoid", removeListener);
+		removeLastEllipsoid.setToolTipText("Removes the last ellipdoid from list");
 
 		confirmSequence = new EzButton("Confirm sequence", confirmListener);
 		displayPoints = new EzVarBoolean("Display points", true);
@@ -130,6 +142,21 @@ public class fitellipsoid extends EzPlug implements EzStoppable {
 	 */
 	private void initializeListeners() {
 
+		removeListener = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				ThreadUtil.bgRun(new Runnable() {
+
+					@Override
+					public void run() {
+						SavingStatic.removeLast();
+					}
+				});
+			}
+		};
+		
 		exportBinaryListener = new ActionListener() {
 
 			@Override

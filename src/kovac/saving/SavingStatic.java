@@ -1,10 +1,13 @@
 package kovac.saving;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import icy.painter.Overlay;
+import kovac.res.Points;
 import kovac.res.util.LinkedViewersUtil;
 import kovac.shapes.Ellipsoid;
 import kovac.shapes.EllipsoidOverlay;
@@ -21,8 +24,41 @@ public class SavingStatic {
 	/**
 	 * The saved ellipsoids (each must have a different name)
 	 */
-	private static Map<String, Ellipsoid> savedEllipsoids = new HashMap<String, Ellipsoid>();
+	private static Map<String, Ellipsoid> savedEllipsoids = new LinkedHashMap<String, Ellipsoid>();
 
+	/**
+	 * Removes the last ellipsoid
+	 * 
+	 * @param e
+	 *            The ellipsoid to save
+	 * @param name
+	 *            The name to give to it
+	 */
+	public static void removeLast() {
+		
+		LinkedViewersUtil.displayAllOverlaysFromVTK();
+		
+		List<String> list = new ArrayList<String>(savedEllipsoids.keySet());
+		if (list.size()>=1){
+			savedEllipsoids.remove(list.get(list.size()-1));
+
+			Saving.saveCurrentStatic();
+			System.out.println("Last ellipsoid removed. Number of ellipsoids  in savedEllipsoids: "+getNumberOfEllipsoids());
+			
+			if (LinkedViewersUtil.areSet()) {
+				LinkedViewersUtil.displayAllOverlaysFromVTK();
+				LinkedViewersUtil.removeEllipsoidOverlays();
+				LinkedViewersUtil.displayAllOverlaysFromVTK();
+
+				LinkedViewersUtil.getOrthCanvas().repaint();
+			}				
+			SavingStatic.regenerate();			
+		}
+		else{
+			System.out.println("No ellipsoid remaining in the list");			
+		};
+	}
+	
 	/**
 	 * Saves the given ellipsoid with the given name
 	 * 
@@ -76,8 +112,10 @@ public class SavingStatic {
 		return savedEllipsoids.values();
 	}
 	
-	public static void regenerate() {
+	public static void regenerate() {			
+		System.out.println("NUMBER OF REGENERATED ELLIPSOIDS "+savedEllipsoids.size());
 		for (Ellipsoid e : savedEllipsoids.values()) {
+			System.out.println("Regeneration ellipsoid "+ e.getName());
 			e.regenerate();
 		}
 	}

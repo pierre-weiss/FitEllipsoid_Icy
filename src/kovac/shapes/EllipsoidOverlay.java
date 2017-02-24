@@ -277,14 +277,14 @@ public class EllipsoidOverlay extends Overlay implements VtkPainter {
 		for (double d1 : length) {
 			for (double d2 : length) {
 				if (d1 != d2) {
-					if (d1 - d2 > 0.99) {
+					if (d1/d2 > 3) {
 						needsToDelete = true;
 					}
 				}
 			}
 		}
 		if (needsToDelete
-				&& !ConfirmDialog.confirm("The ellipsoid has a very elongated shape, do you want to proceed anyway ?")) {
+				&& !ConfirmDialog.confirm("The ellipsoid elongation is higher than 3, do you want to proceed anyway ?")) {
 			SavingStatic.deleteEllipsoid(ellipsoid.getName());
 			this.remove();
 		}

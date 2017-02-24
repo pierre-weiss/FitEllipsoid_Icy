@@ -81,6 +81,11 @@ public class SegOrthoViewer implements PluginCanvas {
 	// the original class' functionalities
 
 	private boolean isNotDeleting = true;
+	private JCheckBox Jlock;
+	
+	public JCheckBox getlock() {
+		return Jlock;
+	}
 	
 	@Override
 	public String getCanvasClassName() {
@@ -256,6 +261,7 @@ public class SegOrthoViewer implements PluginCanvas {
 		@Override
 		public void customizeToolbar(JToolBar toolBar) {
 			super.customizeToolbar(toolBar);
+			toolBar.removeAll(); // To get a minimalist toolbar
 
 			final JCheckBox showCrossHair = new JCheckBox("Crosshair", true);
 			showCrossHair.setFocusable(false);
@@ -282,6 +288,7 @@ public class SegOrthoViewer implements PluginCanvas {
 			});
 
 			toolBar.add(lock);
+			Jlock=lock;
 
 			final JLabel sizeLabel = new JLabel("  Zoom:");
 			final JLabel zoomValueLabel = new JLabel(zoomSlider.getValue() + "%");
@@ -439,6 +446,8 @@ public class SegOrthoViewer implements PluginCanvas {
 			}
 			default:
 			}
+			
+		
 			refreshAxis();
 			refresh();
 		}
@@ -829,6 +838,7 @@ public class SegOrthoViewer implements PluginCanvas {
 								g2.drawLine(posX, 0, posX, seq.getHeight());
 								g2.drawLine(0, posY, seq.getWidth(), posY);
 							}
+							
 							break;
 
 						case X:

@@ -79,6 +79,17 @@ public class Points {
 				LinkedViewersUtil.removeOverlayFromVTK(o);
 		}
 	}
+
+	/**
+	 * Clears the ellipsoids overlays displayed in the VTK view, removing them from
+	 * the sequence
+	 */
+	public static void clearEllipsoidsOverlays() {
+		for (Overlay o : LinkedViewersUtil.getVTKOverlays()) {
+			if (o instanceof EllipsoidOverlay)
+				LinkedViewersUtil.removeOverlayFromVTK(o);
+		}
+	}
 	
 	public static void remove(PointInSpace pt) {
 		for (List<PointInSpace> list : multiplePointsEllipse.values())
@@ -104,10 +115,13 @@ public class Points {
 	}
 
 	public static void removeLastOne() {
-		if (points.isEmpty())
+		if (points.isEmpty()){
+			System.out.println("No remaining points. Cannot remove.");
 			return;
+		}
 		points.get(points.size() - 1).getOverlay().remove();
 		points.remove(points.size() - 1);
+		LinkedViewersUtil.getOrthCanvas().repaint();		
 	}
 	
 	public static void clear() {
@@ -121,27 +135,32 @@ public class Points {
 	public static void createEllipsoids() {
 		EllipsoidAlgorithm algo = null;
 		EllipsoidOverlay ellipsoid = null;
-		List<Point3D> pointsToUse = new ArrayList<Point3D>();
-		int i = 1;
-		for (List<PointInSpace> currentList : multiplePointsEllipse.values()) {
-			System.out.println("Generating ellipsoid number " + i++);
-			for (PointInSpace pt : currentList)
-				pointsToUse.add(pt.getPoint());
-		}
-		algo = new EllipsoidAlgorithm(pointsToUse);
-		ellipsoid = (EllipsoidOverlay) algo.generateEllipsoid();
-		LinkedViewersUtil.addOverlayToVTK(ellipsoid);
-		ellipsoid.setName("Ellipsoid " + SavingStatic.getNumberOfEllipsoids());
-		ellipsoid.validate();
-		if (fitellipsoid.isDisplayingPoints()) {
-			GroupPointsOverlay group = new GroupPointsOverlay("Group number " + groups.size(), pointsToUse);
-			groups.add(group);
-			LinkedViewersUtil.addOverlayToVTK(group);
-		}
-		ellipsoid.checkValues();
-		pointsToUse.clear();
+		
+			List<Point3D> pointsToUse = new ArrayList<Point3D>();
+			int i = 1;
+			for (List<PointInSpace> currentList : multiplePointsEllipse.values()) {
+				System.out.println("Generating ellipsoid number " + i++);
+				for (PointInSpace pt : currentList)
+					pointsToUse.add(pt.getPoint());
+			}
 
-		clear();
+			if (pointsToUse.size()>12){
+				algo = new EllipsoidAlgorithm(pointsToUse);
+				ellipsoid = (EllipsoidOverlay) algo.generateEllipsoid();
+				LinkedViewersUtil.addOverlayToVTK(ellipsoid);
+				ellipsoid.setName("Ellipsoid " + SavingStatic.getNumberOfEllipsoids());
+				ellipsoid.validate();
+				if (fitellipsoid.isDisplayingPoints()) {
+					GroupPointsOverlay group = new GroupPointsOverlay("Group number " + groups.size(), pointsToUse);
+					groups.add(group);
+					LinkedViewersUtil.addOverlayToVTK(group);
+				}
+				ellipsoid.checkValues();
+				pointsToUse.clear();		
+				clear();
+			}
+			else{
+				System.out.println("Not enough points. Minimum is 12. Please add some.");
+			}
 	}
-
 }

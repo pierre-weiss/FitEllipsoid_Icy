@@ -13,7 +13,7 @@ import kovac.maths.EllipsoidAlgorithm;
  * @author bastien.kovac
  *
  */
-public class QuadricExpression {
+public class QuadricExpression_REVISED {
 
 	private Matrix coefficients;
 
@@ -23,11 +23,11 @@ public class QuadricExpression {
 
 	private double xSemiLength, ySemiLength, zSemiLength;
 
-	public QuadricExpression(Matrix coefficients) {
+	public void QuadricExpression(Matrix coefficients) {
 		this.coefficients = coefficients;
 	}
 
-	public QuadricExpression(double[] coefficients) {
+	public void QuadricExpression(double[] coefficients) {
 		if (coefficients.length != 10)
 			throw new IllegalArgumentException("Needs 10 factors to build a QuadricExpression");
 		double[][] matArrayCoeffs = new double[10][1];

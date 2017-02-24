@@ -61,6 +61,7 @@ public class Saving {
 		savedEllipsoids = new PersistentEllipsoids();
 	}
 
+	
 	public static void setSavingFile(File file) {
 		if (file == null)
 			return;
@@ -77,7 +78,7 @@ public class Saving {
 		if (loadedDoc != null) {
 			savedEllipsoids = new PersistentEllipsoids();
 			if (savedEllipsoids.loadFromXML(loadedDoc)) {
-				System.out.println("Loading completed with success");
+				System.out.println("Loading completed with success. " + SavingStatic.getNumberOfEllipsoids() + "ellipsoids were loaded.");
 				if (LinkedViewersUtil.areSet()) {
 					SavingStatic.regenerate();
 					LinkedViewersUtil.getOrthCanvas().repaint();

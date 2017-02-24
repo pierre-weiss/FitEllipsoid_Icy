@@ -4,22 +4,173 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+
+import Jama.Matrix;
 
 import icy.sequence.DimensionId;
 import icy.type.point.Point3D;
 import kovac.res.Points;
 import kovac.res.Points.PointInSpace;
 import kovac.res.enums.Methods;
+import kovac.saving.SavingStatic;
+import kovac.shapes.Ellipsoid;
 import plugins.weiss.fitellipsoid.fitellipsoid;
 
 public class PaintersUtil {
 
 	private static Shape eraserZone;
 
-	public static void paintIntersection(Graphics2D g2, DimensionId currentDimension, double[] truePos) {
+	public static void paintIntersection(Graphics2D g2, DimensionId dim, double[] truePos) {
+		ArrayList<Ellipsoid> ellipsoids = new ArrayList<Ellipsoid>(SavingStatic.getAllEllipsoids());
+
+		double x,y,z;
+		double a11,a12,a13,a23,a22,a33,b1,b2,b3,c;
+		double b1b,b2b,b3b,cb;
+		
+		x=truePos[0];y=truePos[1];z=truePos[2];
+		
+		switch (dim) {		
+		case X:	
+			for (Ellipsoid e : ellipsoids) {			
+				Matrix M=e.getQuadric().getCoefficients();
+				a11=M.get(0,0);a22=M.get(1,0);a33=M.get(2,0);
+				a12=M.get(3,0);a13=M.get(4,0);a23=M.get(5,0);
+				b1=M.get(6,0);b2=M.get(7,0);b3=M.get(8,0);
+				c=M.get(9, 0);
+				
+				// In the YZ plane, the ellipse implicit equation is J(y,z) = a22 y^2 + a33 z^2 + 2a23 yz + b2b y + b3b z + cb = 0
+				b2b=b2+2*a12*x;
+				b3b=b3+2*a13*x;
+				cb=c+a11*x*x+b1*x;
+				
+				// Does this ellipse intersect the YZ plane at X=x?
+				double ym,zm;
+				ym=-1.0/(a22*a33-a23*a23)*(a33*b2b/2-a23*b3b/2);
+				zm=-1.0/(a22*a33-a23*a23)*(-a23*b2b/2+a22*b3b/2);
+				double val = a22*ym*ym + a33*zm*zm + 2*a23*ym*zm + b2b*ym + b3b*zm + cb;
+
+				if (val<=-1e-10){
+					// Explanation of code in Case Z
+					double D=Math.sqrt((a22-a33)*(a22-a33)+4*a23*a23);
+					double sigma1=0.5*(a22+a33+D);
+					double sigma2=0.5*(a22+a33-D);
+					
+					double r2 = (a22*ym+a23*zm)*ym+(a23*ym+a33*zm)*zm - cb; //r^2 = <Az,z> - c
+					double l1=Math.sqrt(r2 / sigma1);
+					double l2=Math.sqrt(r2 / sigma2);
+					
+					double[] v1={2.0*a23,a33-a22+D};
+					double theta = -Math.atan2(-v1[1],v1[0]);
+
+					Shape ellipse = new Ellipse2D.Double(-l1,-l2, 2*l1, 2*l2);
+					ellipse=AffineTransform.getRotateInstance(theta).createTransformedShape(ellipse);
+					ellipse=AffineTransform.getTranslateInstance(zm,ym).createTransformedShape(ellipse);
+					g2.draw(ellipse);
+					g2.fill(ellipse);
+				}
+			}			
+			
+			break;
+		case Y:		
+			for (Ellipsoid e : ellipsoids) {	
+				Matrix M=e.getQuadric().getCoefficients();
+				a11=M.get(0,0);a22=M.get(1,0);a33=M.get(2,0);
+				a12=M.get(3,0);a13=M.get(4,0);a23=M.get(5,0);
+				b1=M.get(6,0);b2=M.get(7,0);b3=M.get(8,0);
+				c=M.get(9, 0);
+				
+				// In the XZ plane, the ellipse implicit equation is J(x,z) = a11 x^2 + a33 z^2 + 2a13 xz + b1b x + b3b z + cb = 0
+				b1b=b1+2*a12*y;
+				b3b=b3+2*a23*y;
+				cb=c+a22*y*y+b2*y;
+				
+				// Does this ellipse intersect the XZ plane at Y=y?
+				double xm,zm;
+				xm=-1.0/(a11*a33-a13*a13)*(a33*b1b/2-a13*b3b/2);
+				zm=-1.0/(a11*a33-a13*a13)*(-a13*b1b/2+a11*b3b/2);
+				double val = a11*xm*xm + a33*zm*zm + 2*a13*xm*zm + b1b*xm + b3b*zm + cb;
+
+				if (val<=-1e-10){
+					// Explanation of code in Case Z
+					double D=Math.sqrt((a11-a33)*(a11-a33)+4*a13*a13);
+					double sigma1=0.5*(a11+a33+D);
+					double sigma2=0.5*(a11+a33-D);
+					
+					double r2 = (a11*xm+a13*zm)*xm+(a13*xm+a33*zm)*zm - cb; //r^2 = <Az,z> - c
+					double l1=Math.sqrt(r2 / sigma1);
+					double l2=Math.sqrt(r2 / sigma2);
+					
+					double[] v1={2.0*a13,a33-a11+D};
+					double theta = -Math.atan2(-v1[1],v1[0]);
+
+					Shape ellipse = new Ellipse2D.Double(-l1,-l2, 2*l1, 2*l2);
+					ellipse=AffineTransform.getRotateInstance(theta).createTransformedShape(ellipse);
+					ellipse=AffineTransform.getTranslateInstance(xm, zm).createTransformedShape(ellipse);
+					g2.draw(ellipse);
+					g2.fill(ellipse);
+				}
+			}
+			
+			break;
+		case Z:						
+			for (Ellipsoid e : ellipsoids) {		
+				Matrix M=e.getQuadric().getCoefficients();
+				a11=M.get(0,0);a22=M.get(1,0);a33=M.get(2,0);
+				a12=M.get(3,0);a13=M.get(4,0);a23=M.get(5,0);
+				b1=M.get(6,0);b2=M.get(7,0);b3=M.get(8,0);
+				c=M.get(9, 0);
+				
+				// In the XY plane, the ellipse implicit equation is J(x,y) = a11 x^2 + a22 y^2 + 2a12 xy + b1b x + b2b y + cb = 0
+				b1b=b1+2*a13*z;
+				b2b=b2+2*a23*z;
+				cb=c+a33*z*z+b3*z;
+				
+				// Does this ellipse intersect the XY plane at Z=z?
+				// To answer this, we find the minimum of J(x,y)
+				// This amounts to solving a11 x + a12 y = -b1b/2 and a12 x + a22 y = -b2b/2 
+				double xm,ym;
+				xm=-1.0/(a11*a22-a12*a12)*(a22*b1b/2-a12*b2b/2);
+				ym=-1.0/(a11*a22-a12*a12)*(-a12*b1b/2+a11*b2b/2);
+				double val = a11*xm*xm + a22*ym*ym + 2*a12*xm*ym + b1b*xm + b2b*ym + cb;
+
+				if (val<=-1e-10){
+					// Now, we know that the ellipse is all the points (x,y) such that
+					// a11*x*x + a22*y*y + 2*a12*x*y + b1b*x + b2b*y + cb = 0
+					// What does this mean in terms of center, axes lengths and rotation angle?
+					// First, notice that center is (xm,ym)
+					// Then Length of each axis l1>=l2>=0
+					double D=Math.sqrt((a11-a22)*(a11-a22)+4*a12*a12);
+					double sigma1=0.5*(a11+a22+D);
+					double sigma2=0.5*(a11+a22-D);
+					
+					double r2 = (a11*xm+a12*ym)*xm+(a12*xm+a22*ym)*ym - cb; //r^2 = <Az,z> - c
+					double l1=Math.sqrt(r2 / sigma1);
+					double l2=Math.sqrt(r2 / sigma2);
+					
+					//First eigenvector's direction is given by v1=(2c, b-a+D)
+					double[] v1={2.0*a12,a22-a11+D};
+					double theta = -Math.atan2(-v1[1],v1[0]);
+
+					// Now we have everything to draw the ellipse with Java!
+					Shape ellipse = new Ellipse2D.Double(-l1,-l2, 2*l1, 2*l2);
+					ellipse=AffineTransform.getRotateInstance(theta).createTransformedShape(ellipse);
+					ellipse=AffineTransform.getTranslateInstance(xm, ym).createTransformedShape(ellipse);
+					g2.draw(ellipse);
+					g2.fill(ellipse);
+				}
+				
+			}
+			break;
+		default:
+			break;
+		}
+		
 
 	}
 
@@ -33,6 +184,7 @@ public class PaintersUtil {
 		Point2D ptReturn = null;
 		double[] scale = LinkedViewersUtil.getScale();
 		double minScale = MathUtils.min(scale);
+		
 		
 		switch (dim) {
 		case X:

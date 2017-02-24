@@ -25,7 +25,7 @@ public class ChoiceSavingFileFrame extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final String errorMessage = "A previous saving file already exists. \n"
+	private static final String errorMessage = "A previous file is associated to this image. \n"
 			+ "Would you like to save your work in another one, or to load it ?";
 
 	private File saveDirectory, saveFile;

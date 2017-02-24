@@ -14,6 +14,8 @@ import kovac.res.gui.SegOrthoViewer;
 import kovac.res.gui.SegOrthoViewer.SegOrthoCanvas;
 import kovac.res.gui.SegOrthoViewer.SegOrthoCanvas.SegOrthoView;
 import kovac.shapes.AxisOverlay;
+import kovac.shapes.GroupPointsOverlay;
+import kovac.shapes.EllipsoidOverlay;
 import plugins.kernel.canvas.VtkCanvas;
 
 /**
@@ -225,7 +227,24 @@ public class LinkedViewersUtil {
 			return;
 		getVTKSequence().removeOverlay(o);
 	}
+	
+	/**
+	 * Display all Overlays from the VTK sequence
+	 * 
+	 */
+	public static void displayAllOverlaysFromVTK() {
+		if (!vtkSetUp)
+			return;
 
+		System.out.println("Below are all overlays:");
+		for (Overlay o : getVTKOverlays()) {
+			System.out.println("Overlay " + o.getName() + "  Of " + o.getClass());
+		}
+		System.out.println("");
+
+	}
+
+	
 	/**
 	 * Remove all LineOverlay from the VTK sequence, used to update and/or
 	 * delete the three axis
@@ -240,11 +259,40 @@ public class LinkedViewersUtil {
 		}
 	}
 
+	
+	/**
+	 * Remove all EllipsoidOverlay from the VTK sequence
+	 */
+	public static void removeEllipsoidOverlays(){
+		if (!vtkSetUp)
+			return;
+		
+		System.out.println("Removing all ellipsoid overlays ");
+		for (Overlay o : getVTKOverlays()){
+			if (o instanceof EllipsoidOverlay){
+				System.out.println("Removing overlay "+ o.getName());
+				removeOverlayFromVTK(o);
+			}
+			if (o instanceof GroupPointsOverlay){
+				System.out.println("Removing overlay "+ o.getName());
+				removeOverlayFromVTK(o);
+			}
+		}
+	}
+	
+	
+	
 	public static void removeOverlays() {
 		if (!vtkSetUp)
 			return;
+		
+		System.out.println("Number of overlays "+getVTKOverlays().size());
+
 		for (Overlay o : getVTKOverlays())
 			removeOverlayFromVTK(o);
+		
+		System.out.println("Number of overlays after removing"+getVTKOverlays().size());
+
 	}
 
 	/**

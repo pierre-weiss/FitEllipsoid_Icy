@@ -106,9 +106,6 @@ public class QuadricExpression {
 		xSemiLength = Math.sqrt(r2 / S.get(0, 0));
 		ySemiLength = Math.sqrt(r2 / S.get(1, 1));
 		zSemiLength = Math.sqrt(r2 / S.get(2, 2));
-
-		System.out.println("x= " + xSemiLength + " -- y=" + ySemiLength + " -- z=" + zSemiLength);
-
 		
 		axisVector = U;
 
