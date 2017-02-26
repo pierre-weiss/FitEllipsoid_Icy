@@ -48,10 +48,7 @@ public class SavingStatic {
 			System.out.println("Last ellipsoid removed. Number of ellipsoids remaining: "+getNumberOfEllipsoids());
 			
 			if (LinkedViewersUtil.areSet()) {
-				LinkedViewersUtil.displayAllOverlaysFromVTK();
 				LinkedViewersUtil.removeEllipsoidOverlays();
-				LinkedViewersUtil.displayAllOverlaysFromVTK();
-
 				LinkedViewersUtil.getOrthCanvas().repaint();
 			}				
 			SavingStatic.regenerate();			

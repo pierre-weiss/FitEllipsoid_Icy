@@ -147,9 +147,10 @@ public class Points {
 			if (pointsToUse.size()>12){
 				algo = new EllipsoidAlgorithm(pointsToUse);
 				ellipsoid = (EllipsoidOverlay) algo.generateEllipsoid();
-				LinkedViewersUtil.addOverlayToVTK(ellipsoid);
 				ellipsoid.setName("Ellipsoid " + SavingStatic.getNumberOfEllipsoids());
 				ellipsoid.validate();
+				LinkedViewersUtil.addOverlayToVTK(ellipsoid);
+
 				if (fitellipsoid.isDisplayingPoints()) {
 					GroupPointsOverlay group = new GroupPointsOverlay("Group number " + groups.size(), pointsToUse);
 					groups.add(group);

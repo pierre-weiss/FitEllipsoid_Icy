@@ -19,7 +19,7 @@ import icy.system.thread.ThreadUtil;
 import kovac.binaryMask.ExportBinaryMask;
 import kovac.res.Points;
 import kovac.res.enums.Methods;
-import kovac.res.gui.SegOrthoViewer;
+import kovac.res.gui.SegOrthoViewer.SegOrthoCanvas;
 import kovac.res.util.LinkedViewersUtil;
 import kovac.saving.ExportCSV;
 import kovac.saving.Saving;
@@ -73,10 +73,13 @@ public class fitellipsoid extends EzPlug implements EzStoppable {
 		case POINTS:
 			Points.saveCurrentList();
 			Points.createEllipsoids();
+			
+			// We unlock the orthoview
+			SegOrthoCanvas canvas = (SegOrthoCanvas) LinkedViewersUtil.getOrth().getCanvas();
+			canvas.getLock().setSelected(false);
+			canvas.setLock(false);
+			
 			LinkedViewersUtil.getOrthCanvas().repaint(); //refreshes orthoviews
-			// Here we want to unlock the orthoview
-			//LinkedViewersUtil.getOrth().getCanvas()
-			//SegOrthoViewer.this.getlock().setSelected(0);
 
 			break;
 		default:

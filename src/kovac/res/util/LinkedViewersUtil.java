@@ -225,7 +225,6 @@ public class LinkedViewersUtil {
 	public static void removeOverlayFromVTK(Overlay o) {
 		if (!vtkSetUp)
 			return;
-		System.out.println(getVTKSequence().removeOverlay(o));
 	}
 	
 	/**
@@ -271,6 +270,7 @@ public class LinkedViewersUtil {
 		for (Overlay o : getVTKOverlays()){
 			if (o instanceof EllipsoidOverlay){
 				System.out.println("Removing overlay "+ o.getName());
+				o.setCanBeRemoved(true);
 				//o.remove();
 				removeOverlayFromVTK(o);
 			}

@@ -81,11 +81,6 @@ public class SegOrthoViewer implements PluginCanvas {
 	// the original class' functionalities
 
 	private boolean isNotDeleting = true;
-	private JCheckBox Jlock;
-	
-	public JCheckBox getlock() {
-		return Jlock;
-	}
 	
 	@Override
 	public String getCanvasClassName() {
@@ -111,6 +106,30 @@ public class SegOrthoViewer implements PluginCanvas {
 		private boolean crossHairVisible = true, isLocked = false;
 
 		private Overlay currentAxis;
+		
+		private JCheckBox lock;
+		
+		public void setLock(boolean val){
+			isLocked=val;
+		}
+		
+		public JCheckBox getLock() {
+			if (lock == null) {
+				this.lock = new JCheckBox("Lock", false);
+				lock.setFocusable(false);
+				lock.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						isLocked = lock.isSelected();
+						if (!isLocked)
+							Points.saveCurrentList();
+						refresh();
+					}
+				});
+			}
+			return lock;
+		}
 
 		public SegOrthoCanvas(Viewer viewer) {
 			super(viewer);
@@ -286,9 +305,7 @@ public class SegOrthoViewer implements PluginCanvas {
 					refresh();
 				}
 			});
-
-			toolBar.add(lock);
-			Jlock=lock;
+			toolBar.add(getLock());
 
 			final JLabel sizeLabel = new JLabel("  Zoom:");
 			final JLabel zoomValueLabel = new JLabel(zoomSlider.getValue() + "%");
