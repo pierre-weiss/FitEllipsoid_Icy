@@ -44,7 +44,7 @@ public class EllipsoidAlgorithm {
 	/**
 	 * Maximum number of iterations of the algorithm
 	 */
-	private static int nbIterations = 100000;
+	private static int nbIterations = 10000;
 	/**
 	 * The matrix representing the base points. It is a nbPoints x 3 matrix,
 	 * with each column representing a coordinate
@@ -158,7 +158,7 @@ public class EllipsoidAlgorithm {
 			q = proxf2(p);
 			Matrix update = proxf1(M, q.times(2).minus(p)).minus(q);
 			p = p.plus(update);
-			if (update.norm2() < p.norm2() * 1e-16) {
+			if (update.norm2() < p.norm2() * 1e-8) {
 				System.out.println("Ellipsoid found in " + i + " iterations");
 				break;
 			}
@@ -197,10 +197,6 @@ public class EllipsoidAlgorithm {
 		Matrix b2t = b2.transpose();
 		c.minusEquals(b2t.times(Pt));		
 
-		//WriteMatrix("/media/weiss/Donnees/Works/Workspace_Eclipse/FitEllipsoid/A.txt",A);
-		//WriteMatrix("/media/weiss/Donnees/Works/Workspace_Eclipse/FitEllipsoid/b.txt",b);
-		//WriteMatrix("/media/weiss/Donnees/Works/Workspace_Eclipse/FitEllipsoid/c.txt",c);
-
 		// FOR MATLAB DISPLAY
 		//double[] eq = {A.get(0,0),A.get(1,1),A.get(2,2),
 		//		A.get(1,0)*Math.sqrt(2),A.get(2,0)*Math.sqrt(2),A.get(2,1)*Math.sqrt(2),
@@ -219,9 +215,7 @@ public class EllipsoidAlgorithm {
 		// b=[Q(6),Q(7),Q(8)]
 		// c=Q(9)
 		System.out.println("Finished -- ");
-		
-		//WriteMatrix("/media/weiss/Donnees/Works/Workspace_Eclipse/FitEllipsoid/q.txt",Q);
-		
+				
 		return new QuadricExpression(Q);
 	}
 
@@ -451,6 +445,9 @@ public class EllipsoidAlgorithm {
 		EllipsoidOverlay ret = new EllipsoidOverlay(quadricExpression.getMatSR(), realCenter);
 		ret.saveQuadric(quadricExpression, quadricExpressionMicro);
 		ret.setEllipsoid(new Ellipsoid(quadricExpression));
+		ret.setCanBeRemoved(true);
+		ret.setPersistent(false);
+		ret.setReadOnly(false);
 		return ret;
 	}
 }

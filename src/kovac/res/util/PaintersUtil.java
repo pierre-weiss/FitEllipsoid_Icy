@@ -66,7 +66,7 @@ public class PaintersUtil {
 					double l2=Math.sqrt(r2 / sigma2);
 					
 					double[] v1={2.0*a23,a33-a22+D};
-					double theta = -Math.atan2(-v1[1],v1[0]);
+					double theta = Math.atan2(-v1[1],v1[0])-Math.PI/2;
 
 					Shape ellipse = new Ellipse2D.Double(-l1,-l2, 2*l1, 2*l2);
 					ellipse=AffineTransform.getRotateInstance(theta).createTransformedShape(ellipse);
@@ -74,7 +74,7 @@ public class PaintersUtil {
 					g2.draw(ellipse);
 					g2.fill(ellipse);
 				}
-			}			
+			}		
 			
 			break;
 		case Y:		
@@ -106,7 +106,7 @@ public class PaintersUtil {
 					double l1=Math.sqrt(r2 / sigma1);
 					double l2=Math.sqrt(r2 / sigma2);
 					
-					double[] v1={2.0*a13,a33-a11+D};
+					double[] v1={2.0*a13,a33-a11+D};					
 					double theta = -Math.atan2(-v1[1],v1[0]);
 
 					Shape ellipse = new Ellipse2D.Double(-l1,-l2, 2*l1, 2*l2);

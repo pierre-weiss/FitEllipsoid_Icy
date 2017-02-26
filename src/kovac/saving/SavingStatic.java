@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import icy.painter.Overlay;
-import kovac.res.Points;
 import kovac.res.util.LinkedViewersUtil;
 import kovac.shapes.Ellipsoid;
 import kovac.shapes.EllipsoidOverlay;
@@ -26,6 +25,13 @@ public class SavingStatic {
 	 */
 	private static Map<String, Ellipsoid> savedEllipsoids = new LinkedHashMap<String, Ellipsoid>();
 
+	public static void displayAll() {	
+	  for(Map.Entry<String, Ellipsoid> e : savedEllipsoids.entrySet()) {
+	        System.out.println(e.getKey());
+	    }
+      System.out.println("");
+	}
+	
 	/**
 	 * Removes the last ellipsoid
 	 * 
@@ -34,16 +40,12 @@ public class SavingStatic {
 	 * @param name
 	 *            The name to give to it
 	 */
-	public static void removeLast() {
-		
-		LinkedViewersUtil.displayAllOverlaysFromVTK();
-		
+	public static void removeLast() {	
 		List<String> list = new ArrayList<String>(savedEllipsoids.keySet());
 		if (list.size()>=1){
 			savedEllipsoids.remove(list.get(list.size()-1));
-
 			Saving.saveCurrentStatic();
-			System.out.println("Last ellipsoid removed. Number of ellipsoids  in savedEllipsoids: "+getNumberOfEllipsoids());
+			System.out.println("Last ellipsoid removed. Number of ellipsoids remaining: "+getNumberOfEllipsoids());
 			
 			if (LinkedViewersUtil.areSet()) {
 				LinkedViewersUtil.displayAllOverlaysFromVTK();

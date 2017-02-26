@@ -91,6 +91,7 @@ public class EllipsoidOverlay extends Overlay implements VtkPainter {
 		// TODO => quadric.updateQuadric(matSR, centerMat);
 		initMat();
 		goToWireframe();
+		this.setCanBeRemoved(true);
 		LinkedViewersUtil.addOverlayToVTK(this);
 		LinkedViewersUtil.getOrthCanvas().repaint();
 	}
@@ -277,14 +278,14 @@ public class EllipsoidOverlay extends Overlay implements VtkPainter {
 		for (double d1 : length) {
 			for (double d2 : length) {
 				if (d1 != d2) {
-					if (d1/d2 > 3) {
+					if (d1/d2 > 5) {
 						needsToDelete = true;
 					}
 				}
 			}
 		}
 		if (needsToDelete
-				&& !ConfirmDialog.confirm("The ellipsoid elongation is higher than 3, do you want to proceed anyway ?")) {
+				&& !ConfirmDialog.confirm("The ellipsoid elongation is higher than 5, do you want to proceed anyway ?")) {
 			SavingStatic.deleteEllipsoid(ellipsoid.getName());
 			this.remove();
 		}
