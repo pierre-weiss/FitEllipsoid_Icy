@@ -90,6 +90,7 @@ public class Saving {
 	}
 
 	public static void saveCurrentStatic() {
+		savedXML = XMLUtil.createDocument(false); // Deletes current XML file
 		if (!savedEllipsoids.saveToXML(savedXML)) {
 			System.err.print("Error while saving file");
 		}

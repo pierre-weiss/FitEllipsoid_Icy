@@ -5,7 +5,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import icy.common.Version;
@@ -53,6 +55,7 @@ public class fitellipsoid extends EzPlug implements EzStoppable {
 	private static EzButton confirmSequence;
 	private static EzButton exportBinary;
 	private static EzButton removeLastEllipsoid;
+	private static EzButton removeGivenEllipsoid;
 	private static EzVarBoolean displayPoints;
 
 	private static ActionListener confirmListener;
@@ -60,6 +63,7 @@ public class fitellipsoid extends EzPlug implements EzStoppable {
 	private static ActionListener exportListener;
 	private static ActionListener exportBinaryListener;
 	private static ActionListener removeListener;
+	private static ActionListener removeGivenListener;
 
 	@Override
 	public void execute() {
@@ -112,6 +116,7 @@ public class fitellipsoid extends EzPlug implements EzStoppable {
 		addEzComponent(methodChoice);
 		addEzComponent(exportCSV);
 		addEzComponent(exportBinary);
+		addEzComponent(removeGivenEllipsoid);
 		addEzComponent(removeLastEllipsoid);
 
 		methodChoice.addVarChangeListener(methodListener);
@@ -131,8 +136,11 @@ public class fitellipsoid extends EzPlug implements EzStoppable {
 		exportCSV.setToolTipText("Export data as a CSV file");
 		exportBinary = new EzButton("Export as Binary Mask", exportBinaryListener);
 		exportBinary.setToolTipText("Create a new binary image, where every pixel's value is 0, except for the ones inside an ellipsoid");
+		removeGivenEllipsoid  = new EzButton("Remove given ellipsoid", removeGivenListener);
+		removeGivenEllipsoid.setToolTipText("Removes an ellipsoid given by a number");
 		removeLastEllipsoid  = new EzButton("Remove last ellipsoid", removeListener);
 		removeLastEllipsoid.setToolTipText("Removes the last ellipdoid from list");
+
 
 		confirmSequence = new EzButton("Confirm sequence", confirmListener);
 		displayPoints = new EzVarBoolean("Display points", true);
@@ -145,6 +153,25 @@ public class fitellipsoid extends EzPlug implements EzStoppable {
 	 */
 	private void initializeListeners() {
 
+		
+		removeGivenListener = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				//ThreadUtil.bgRun(new Runnable() {
+
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						String number = JOptionPane.showInputDialog(this, "Enter the number of your ellipsoid:");
+						//String number = MessageDialog.showDialog("QUESTION", QUESTION_MESSAGE);
+						SavingStatic.removeGiven(number);
+					}
+				});
+			}
+		};
+		
 		removeListener = new ActionListener() {
 
 			@Override

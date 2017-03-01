@@ -225,6 +225,7 @@ public class LinkedViewersUtil {
 	public static void removeOverlayFromVTK(Overlay o) {
 		if (!vtkSetUp)
 			return;
+		o.remove();
 	}
 	
 	/**
@@ -266,16 +267,12 @@ public class LinkedViewersUtil {
 		if (!vtkSetUp)
 			return;
 		
-		System.out.println("Removing all ellipsoid overlays ");
 		for (Overlay o : getVTKOverlays()){
 			if (o instanceof EllipsoidOverlay){
-				System.out.println("Removing overlay "+ o.getName());
 				o.setCanBeRemoved(true);
-				//o.remove();
 				removeOverlayFromVTK(o);
 			}
 			if (o instanceof GroupPointsOverlay){
-				System.out.println("Removing overlay "+ o.getName());
 				removeOverlayFromVTK(o);
 			}
 		}
@@ -287,13 +284,8 @@ public class LinkedViewersUtil {
 		if (!vtkSetUp)
 			return;
 		
-		System.out.println("Number of overlays "+getVTKOverlays().size());
-
 		for (Overlay o : getVTKOverlays())
-			removeOverlayFromVTK(o);
-		
-		System.out.println("Number of overlays after removing"+getVTKOverlays().size());
-
+			removeOverlayFromVTK(o);		
 	}
 
 	/**

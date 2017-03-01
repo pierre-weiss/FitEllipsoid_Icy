@@ -162,7 +162,7 @@ public class EllipsoidAlgorithm {
 				System.out.println("Ellipsoid found in " + i + " iterations");
 				break;
 			}
-			if (i % 10000 == 0) {
+			if ((i>1) && (i % 10000 == 0)) {
 				System.out.println("Current iteration : " + i);
 			}
 			if (i == nbIterations) {
@@ -214,7 +214,6 @@ public class EllipsoidAlgorithm {
 		// A=[[Q(0),Q(3),Q(4)];[Q(3),Q(1),Q(5)];[Q(4),Q(5),Q(3)]]
 		// b=[Q(6),Q(7),Q(8)]
 		// c=Q(9)
-		System.out.println("Finished -- ");
 				
 		return new QuadricExpression(Q);
 	}

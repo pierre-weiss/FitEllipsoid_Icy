@@ -236,6 +236,7 @@ public class SegOrthoViewer implements PluginCanvas {
 			xz.imageChanged();
 			zy.imageChanged();
 
+			LinkedViewersUtil.removeAllLinesOverlayFromVTK();
 			currentAxis = new AxisOverlay("Axis", imageCoordinates());
 			LinkedViewersUtil.addOverlayToVTK(currentAxis);
 

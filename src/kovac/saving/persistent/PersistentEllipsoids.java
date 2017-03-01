@@ -25,6 +25,7 @@ public class PersistentEllipsoids implements XMLPersistent {
 			return false;
 
 		Element className = XMLUtil.getElement(node, ID_CLASS);
+				
 		if (className == null) {
 			className = XMLUtil.addElement(node, ID_CLASS);
 		}

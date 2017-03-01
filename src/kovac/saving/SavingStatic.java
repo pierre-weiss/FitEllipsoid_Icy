@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Iterator;
+
 
 import icy.painter.Overlay;
 import kovac.res.util.LinkedViewersUtil;
@@ -30,6 +32,34 @@ public class SavingStatic {
 	        System.out.println(e.getKey());
 	    }
       System.out.println("");
+	}
+	
+	
+	public static void removeGiven(String number) {
+		int numerased=0;
+
+	    for(Iterator<Map.Entry<String, Ellipsoid>> it = savedEllipsoids.entrySet().iterator(); it.hasNext(); ) {
+	        Map.Entry<String, Ellipsoid> entry = it.next();
+			String numberOnly= entry.getValue().getName().replaceAll("[^0-9]", "");
+
+			if (numberOnly.equals(number)){
+				it.remove();
+				System.out.println("Ellipsoid " + number + " removed");
+
+				Saving.saveCurrentStatic();
+				numerased=numerased+1;
+			}
+	      }
+				
+		if (LinkedViewersUtil.areSet()) {
+			LinkedViewersUtil.removeEllipsoidOverlays();
+			LinkedViewersUtil.getOrthCanvas().repaint();
+		}
+		SavingStatic.regenerate();
+
+		if (numerased==0){
+			System.out.println("Ellipsoid " + number + " inexistant.");
+		}		
 	}
 	
 	/**
@@ -73,7 +103,6 @@ public class SavingStatic {
 			savedEllipsoids.put(name, e);
 		}
 		Saving.saveCurrentStatic();
-		System.out.println(name + " saved");
 	}
 
 	/**
@@ -112,9 +141,8 @@ public class SavingStatic {
 	}
 	
 	public static void regenerate() {			
-		System.out.println("NUMBER OF REGENERATED ELLIPSOIDS "+savedEllipsoids.size());
+		System.out.println("Number of regenerated ellipsoids "+savedEllipsoids.size());
 		for (Ellipsoid e : savedEllipsoids.values()) {
-			System.out.println("Regeneration ellipsoid "+ e.getName());
 			e.regenerate();
 		}
 	}
@@ -132,5 +160,7 @@ public class SavingStatic {
 	public static void deleteEllipsoid(String name) {
 		savedEllipsoids.remove(name);
 	}
+
+
 	
 }

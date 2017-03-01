@@ -2,6 +2,7 @@ package kovac.res.util;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -34,6 +35,9 @@ public class PaintersUtil {
 		double b1b,b2b,b3b,cb;
 		
 		x=truePos[0];y=truePos[1];z=truePos[2];
+		
+		Font myFont = new Font("Serif", Font.ITALIC, 4);
+		g2.setFont(myFont);
 		
 		switch (dim) {		
 		case X:	
@@ -73,6 +77,9 @@ public class PaintersUtil {
 					ellipse=AffineTransform.getTranslateInstance(zm,ym).createTransformedShape(ellipse);
 					g2.draw(ellipse);
 					g2.fill(ellipse);
+					
+					String numberOnly= e.getName().replaceAll("[^0-9]", "");
+			        g2.drawString(numberOnly, (int) zm, (int) ym);
 				}
 			}		
 			
@@ -114,6 +121,9 @@ public class PaintersUtil {
 					ellipse=AffineTransform.getTranslateInstance(xm, zm).createTransformedShape(ellipse);
 					g2.draw(ellipse);
 					g2.fill(ellipse);
+					
+					String numberOnly= e.getName().replaceAll("[^0-9]", "");
+			        g2.drawString(numberOnly, (int) xm, (int) zm);
 				}
 			}
 			
@@ -163,6 +173,9 @@ public class PaintersUtil {
 					ellipse=AffineTransform.getTranslateInstance(xm, ym).createTransformedShape(ellipse);
 					g2.draw(ellipse);
 					g2.fill(ellipse);
+					
+					String numberOnly= e.getName().replaceAll("[^0-9]", "");
+			        g2.drawString(numberOnly, (int) xm, (int) ym);
 				}
 				
 			}
